@@ -3,61 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Julebox</title>
+<title>Flyverbox</title>
 <style>
-:root{--red:#b3202a;--deep:#4a0d12;--green:#1f6b45;--gold:#f2c75c;--snow:#fff8ee;--ink:#2a0a0d}
+:root{--accent:#5eead4;--ink:#0b1220;--text:#f1f5f9;--muted:#94a3b8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;font-family:Georgia,"Times New Roman",serif;color:var(--snow);
- background:radial-gradient(120% 80% at 50% 0%,#7a1620 0%,var(--deep) 60%,#220509 100%) fixed}
-#snow{position:fixed;inset:0;pointer-events:none;z-index:0}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);
+ background:radial-gradient(120% 80% at 50% 0%,#1e293b 0%,#0f172a 60%,var(--ink) 100%) fixed}
 main{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}
 header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
-h1{margin:0;font-size:26px;letter-spacing:.5px;color:var(--gold)}
-h1 small{display:block;font-size:12px;font-weight:normal;color:#f5d9c8;letter-spacing:1.5px;text-transform:uppercase}
-#castBtn{display:flex;align-items:center;gap:7px;border:1px solid var(--gold);background:rgba(0,0,0,.25);color:var(--gold);
+h1{margin:0;font-size:26px;letter-spacing:.5px;color:var(--accent)}
+h1 small{display:block;font-size:12px;font-weight:normal;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+#castBtn{display:flex;align-items:center;gap:7px;border:1px solid var(--accent);background:rgba(0,0,0,.25);color:var(--accent);
  border-radius:999px;padding:9px 14px;font:inherit;font-size:14px;cursor:pointer}
-#castBtn.on{background:var(--gold);color:var(--ink)}
+#castBtn.on{background:var(--accent);color:var(--ink)}
 #castBtn[hidden]{display:none}
-.card{background:linear-gradient(160deg,rgba(255,248,238,.14),rgba(255,248,238,.05));border:1px solid rgba(242,199,92,.35);
+.card{background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid rgba(94,234,212,.35);
  border-radius:22px;padding:22px 18px;text-align:center;backdrop-filter:blur(6px)}
-.gift{width:132px;height:132px;margin:0 auto 14px;position:relative;border-radius:14px;background:var(--red);
- box-shadow:0 10px 24px rgba(0,0,0,.4),inset 0 -8px 0 rgba(0,0,0,.18);transition:transform .4s}
-.gift::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:22px;margin-left:-11px;background:var(--gold)}
-.gift::after{content:"";position:absolute;top:50%;left:0;right:0;height:22px;margin-top:-11px;background:var(--gold)}
-.gift i{position:absolute;top:-26px;left:50%;width:46px;height:30px;margin-left:-23px;z-index:2;font-style:normal;font-size:40px;line-height:30px;text-align:center}
-.gift.play{animation:bob 1.4s ease-in-out infinite}
-@keyframes bob{50%{transform:translateY(-8px) rotate(-2deg)}}
+.gift{width:132px;height:132px;margin:0 auto 14px;border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:56px;color:var(--ink);background:linear-gradient(135deg,#5eead4,#38bdf8);box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.gift.play{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.05)}}
 #title{font-size:21px;margin:6px 0 2px;min-height:26px}
-#artist{font-size:14px;color:#f5d9c8;min-height:18px}
-#castInfo{font-size:13px;color:var(--gold);min-height:18px;margin-top:4px}
-.bar{display:flex;align-items:center;gap:10px;margin:16px 0 6px;font-size:12px;color:#f5d9c8;font-variant-numeric:tabular-nums}
+#artist{font-size:14px;color:var(--muted);min-height:18px}
+#castInfo{font-size:13px;color:var(--accent);min-height:18px;margin-top:4px}
+.bar{display:flex;align-items:center;gap:10px;margin:16px 0 6px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.25);outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);border:0}
-input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);border:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);border:0}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);border:0}
 .ctl{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:8px}
-button.ic{width:46px;height:46px;border-radius:50%;border:1px solid rgba(242,199,92,.5);background:rgba(0,0,0,.2);color:var(--snow);font-size:18px;cursor:pointer}
-button.ic.active{background:var(--green);border-color:#7ee0a8}
-button.big{width:68px;height:68px;font-size:26px;background:var(--gold);color:var(--ink);border:0}
+button.ic{width:46px;height:46px;border-radius:50%;border:1px solid rgba(94,234,212,.5);background:rgba(0,0,0,.2);color:var(--text);font-size:18px;cursor:pointer}
+button.ic.active{background:#0f766e;border-color:var(--accent)}
+button.big{width:68px;height:68px;font-size:26px;background:var(--accent);color:var(--ink);border:0}
+.vol[hidden]{display:none!important}
 .vol{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:16px}
-h2{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:24px 4px 8px}
+h2{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin:24px 4px 8px}
 ul{list-style:none;margin:0;padding:0}
 li{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:14px;cursor:pointer;border:1px solid transparent}
 li:active{background:rgba(255,255,255,.08)}
-li.cur{background:rgba(31,107,69,.45);border-color:rgba(126,224,168,.5)}
-li .n{width:22px;text-align:center;color:var(--gold);font-size:14px}
+li.cur{background:rgba(20,184,166,.22);border-color:rgba(94,234,212,.5)}
+li .n{width:22px;text-align:center;color:var(--accent);font-size:14px}
 li .t{flex:1;min-width:0}
 li .t b{display:block;font-weight:normal;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-li .t span{font-size:12px;color:#f5d9c8}
-li .d{font-size:12px;color:#f5d9c8;font-variant-numeric:tabular-nums}
-#empty{padding:20px;text-align:center;color:#f5d9c8;font-size:14px;line-height:1.5}
-footer{margin-top:22px;text-align:center;font-size:12px;color:#d9b8a8;line-height:1.5}
+li .t span{font-size:12px;color:var(--muted)}
+li .d{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+#empty{padding:20px;text-align:center;color:var(--muted);font-size:14px;line-height:1.5}
+footer{margin-top:22px;text-align:center;font-size:12px;color:var(--muted);line-height:1.5}
 </style>
 </head>
 <body>
-<canvas id="snow"></canvas>
 <main>
  <header>
-  <h1>🎄 Julebox<small>Glædelig jul</small></h1>
+  <h1>Flyverbox<small>Musikafspiller</small></h1>
   <button id="castBtn" hidden aria-label="Afspil på Chromecast">
    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3a2 2 0 0 0-2 2v3h2V5h18v14h-7v2h7a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM1 18v3h3a3 3 0 0 0-3-3zm0-4v2a5 5 0 0 1 5 5h2a7 7 0 0 0-7-7zm0-4v2a9 9 0 0 1 9 9h2A11 11 0 0 0 1 10z"/></svg>
    <span id="castLbl">Cast</span>
@@ -65,7 +60,7 @@ footer{margin-top:22px;text-align:center;font-size:12px;color:#d9b8a8;line-heigh
  </header>
 
  <section class="card">
-  <div class="gift" id="gift"><i>🎀</i></div>
+  <div class="gift" id="gift">♪</div>
   <div id="title">Vælg en sang</div>
   <div id="artist">&nbsp;</div>
   <div id="castInfo"></div>
@@ -77,10 +72,11 @@ footer{margin-top:22px;text-align:center;font-size:12px;color:#d9b8a8;line-heigh
    <button class="ic" id="next" aria-label="Næste">⏭</button>
    <button class="ic" id="rep" aria-label="Gentag">🔁</button>
   </div>
-  <div class="vol">🔈<input type="range" id="vol" min="0" max="100" value="80">🔊</div>
+  <div class="vol" id="volWrap">🔈<input type="range" id="vol" min="0" max="100" value="80">🔊</div>
  </section>
 
- <h2>Julesange</h2>
+ <div id="volNote" class="vol" hidden style="font-size:13px;color:var(--muted)">Brug telefonens volumenknapper til lyden.</div>
+ <h2>Sange</h2>
  <ul id="list"></ul>
  <div id="empty" hidden>Der er ingen sange endnu.</div>
  <footer id="foot"></footer>
@@ -126,7 +122,7 @@ function setUI(){
   if(t && t.artist) $("artist").textContent = t.artist;
   renderList();
   if("mediaSession" in navigator && t){
-    navigator.mediaSession.metadata = new MediaMetadata({title:t.title, artist:t.artist||"Julebox"});
+    navigator.mediaSession.metadata = new MediaMetadata({title:t.title, artist:t.artist||"Flyverbox"});
   }
 }
 function setPlaying(p){
@@ -171,10 +167,14 @@ $("seek").onchange = () => {
   seeking=false;
 };
 $("vol").oninput = () => {
-  const v = $("vol").value/100; audio.volume = v;
-  if(casting){ rp.volumeLevel = v; rpc.setVolumeLevel(); }
+  const v = $("vol").value/100;
+  if(casting){ rp.volumeLevel = v; rpc.setVolumeLevel(); } else audio.volume = v;
 };
 audio.volume = .8;
+// iPhone/iPad ignorerer audio.volume, så skjules slideren og viser en note i stedet
+const volSettable = (() => { const o = audio.volume; audio.volume = .5; const ok = Math.abs(audio.volume - .5) < .01; audio.volume = o; return ok; })();
+function syncVolUI(){ const show = volSettable || casting; $("volWrap").hidden = !show; $("volNote").hidden = show; }
+syncVolUI();
 if("mediaSession" in navigator){
   navigator.mediaSession.setActionHandler("play", toggle);
   navigator.mediaSession.setActionHandler("pause", toggle);
@@ -196,6 +196,7 @@ function initCast(){
   rpc.addEventListener(E.IS_CONNECTED_CHANGED, () => {
     if(rp.isConnected){
       casting = true;
+      $("vol").value = Math.round((rp.volumeLevel ?? .8) * 100); syncVolUI();
       const resume = idx>=0 && !audio.paused;
       const pos = audio.currentTime;
       audio.pause();
@@ -205,6 +206,7 @@ function initCast(){
       if(idx>=0) castLoad(TRACKS[idx], resume, pos);
     } else {
       casting = false;
+      $("vol").value = Math.round(audio.volume * 100); syncVolUI();
       const pos = rp.currentTime, wasPlaying = rp.playerState === "PLAYING";
       $("castBtn").classList.remove("on");
       $("castLbl").textContent = "Cast";
@@ -238,7 +240,7 @@ function castLoad(t, autoplay, startAt){
   if(!s) return;
   const info = new chrome.cast.media.MediaInfo(abs(t.src), t.mime || guessMime(t.src));
   const md = new chrome.cast.media.MusicTrackMediaMetadata();
-  md.title = t.title; md.artist = t.artist || "Julebox";
+  md.title = t.title; md.artist = t.artist || "Flyverbox";
   info.metadata = md;
   const req = new chrome.cast.media.LoadRequest(info);
   req.autoplay = autoplay !== false;
@@ -263,23 +265,6 @@ function fallbackRemote(){
   audio.remote.onconnect = () => { $("castBtn").classList.add("on"); $("castInfo").textContent="Sender til skærm/højttaler"; };
   audio.remote.ondisconnect = () => { $("castBtn").classList.remove("on"); $("castInfo").textContent=""; };
 }
-
-/* ---------- sne ---------- */
-(function(){
-  const c = $("snow"), x = c.getContext("2d");
-  let w, h, f = [];
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function size(){ w = c.width = innerWidth; h = c.height = innerHeight; }
-  size(); addEventListener("resize", size);
-  for(let i=0;i<70;i++) f.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2.6+.8,v:Math.random()*.7+.3,d:Math.random()*6});
-  function tick(){
-    x.clearRect(0,0,w,h); x.fillStyle="rgba(255,255,255,.85)";
-    for(const p of f){ p.y+=p.v; p.d+=.01; p.x+=Math.sin(p.d)*.4; if(p.y>h){p.y=-5;p.x=Math.random()*w;}
-      x.beginPath(); x.arc(p.x,p.y,p.r,0,7); x.fill(); }
-    if(!reduce) requestAnimationFrame(tick);
-  }
-  tick();
-})();
 
 $("foot").textContent = TRACKS.length ? TRACKS.length + " sange" : "";
 renderList();
