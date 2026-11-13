@@ -53,7 +53,7 @@ footer{margin-top:22px;text-align:center;font-size:12px;color:var(--muted);line-
 <main>
  <header>
   <h1>Flyverbox<small>Musikafspiller</small></h1>
-  <button id="castBtn" hidden aria-label="Afspil på Chromecast">
+  <button id="castBtn" aria-label="Afspil på Chromecast">
    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3a2 2 0 0 0-2 2v3h2V5h18v14h-7v2h7a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM1 18v3h3a3 3 0 0 0-3-3zm0-4v2a5 5 0 0 1 5 5h2a7 7 0 0 0-7-7zm0-4v2a9 9 0 0 1 9 9h2A11 11 0 0 0 1 10z"/></svg>
    <span id="castLbl">Cast</span>
   </button>
@@ -235,6 +235,11 @@ function initCast(){
   $("castBtn").hidden = false;
   $("castBtn").onclick = () => ctx.requestSession().catch(()=>{});
 }
+// Standard-handling hvis Chromecast ikke understøttes af browseren
+$("castBtn").onclick = () => {
+  if(audio.webkitShowPlaybackTargetPicker){ audio.webkitShowPlaybackTargetPicker(); return; }
+  $("castInfo").textContent = "Chromecast kræver Chrome eller Edge på computer eller Android (virker ikke på iPhone/iPad eller i Safari/Firefox).";
+};
 function castLoad(t, autoplay, startAt){
   const s = cast.framework.CastContext.getInstance().getCurrentSession();
   if(!s) return;
@@ -260,7 +265,7 @@ window.__onGCastApiAvailable = ok => { if(ok){ try{ initCast(); }catch(e){} } };
 /* Reserve: Remote Playback API (Chrome/Edge/Android) hvis Cast-SDK ikke kan hentes */
 function fallbackRemote(){
   if(!("remote" in audio)) return;
-  audio.remote.watchAvailability(a => { $("castBtn").hidden = !a; }).catch(()=>{ $("castBtn").hidden = false; });
+  audio.remote.watchAvailability(() => {}).catch(() => {});
   $("castBtn").onclick = () => audio.remote.prompt().catch(()=>{});
   audio.remote.onconnect = () => { $("castBtn").classList.add("on"); $("castInfo").textContent="Sender til skærm/højttaler"; };
   audio.remote.ondisconnect = () => { $("castBtn").classList.remove("on"); $("castInfo").textContent=""; };
