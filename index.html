@@ -89,8 +89,9 @@ footer{margin-top:22px;text-align:center;font-size:12px;color:#d9b8a8;line-heigh
 <script>
 /* ===== Sangbibliotek – ret kun denne liste ===== */
 const TRACKS = [
-  // { title: "Jingle Bells", artist: "Kunstner", src: "tracks/jingle-bells.mp3" },
-];
+  { title: "Flyvere I Natten (DJ Base Remix)", artist: "Kim Larsen", src: "tracks/Kim Larsen - Flyvere I Natten (DJ Base Remix).mp3" },
+  { title: "Milkshake (fy fy)", artist: "Pattesutter", src: "tracks/Pattesutter - Milkshake (fy fy).mp3" },
+].map(t => ({ ...t, src: encodeURI(t.src) }));
 /* =============================================== */
 
 const $ = id => document.getElementById(id);
