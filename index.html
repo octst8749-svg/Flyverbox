@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Julebox</title>
+<style>
+:root{--red:#b3202a;--deep:#4a0d12;--green:#1f6b45;--gold:#f2c75c;--snow:#fff8ee;--ink:#2a0a0d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Georgia,"Times New Roman",serif;color:var(--snow);
+ background:radial-gradient(120% 80% at 50% 0%,#7a1620 0%,var(--deep) 60%,#220509 100%) fixed}
+#snow{position:fixed;inset:0;pointer-events:none;z-index:0}
+main{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+h1{margin:0;font-size:26px;letter-spacing:.5px;color:var(--gold)}
+h1 small{display:block;font-size:12px;font-weight:normal;color:#f5d9c8;letter-spacing:1.5px;text-transform:uppercase}
+#castBtn{display:flex;align-items:center;gap:7px;border:1px solid var(--gold);background:rgba(0,0,0,.25);color:var(--gold);
+ border-radius:999px;padding:9px 14px;font:inherit;font-size:14px;cursor:pointer}
+#castBtn.on{background:var(--gold);color:var(--ink)}
+#castBtn[hidden]{display:none}
+.card{background:linear-gradient(160deg,rgba(255,248,238,.14),rgba(255,248,238,.05));border:1px solid rgba(242,199,92,.35);
+ border-radius:22px;padding:22px 18px;text-align:center;backdrop-filter:blur(6px)}
+.gift{width:132px;height:132px;margin:0 auto 14px;position:relative;border-radius:14px;background:var(--red);
+ box-shadow:0 10px 24px rgba(0,0,0,.4),inset 0 -8px 0 rgba(0,0,0,.18);transition:transform .4s}
+.gift::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:22px;margin-left:-11px;background:var(--gold)}
+.gift::after{content:"";position:absolute;top:50%;left:0;right:0;height:22px;margin-top:-11px;background:var(--gold)}
+.gift i{position:absolute;top:-26px;left:50%;width:46px;height:30px;margin-left:-23px;z-index:2;font-style:normal;font-size:40px;line-height:30px;text-align:center}
+.gift.play{animation:bob 1.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(-2deg)}}
+#title{font-size:21px;margin:6px 0 2px;min-height:26px}
+#artist{font-size:14px;color:#f5d9c8;min-height:18px}
+#castInfo{font-size:13px;color:var(--gold);min-height:18px;margin-top:4px}
+.bar{display:flex;align-items:center;gap:10px;margin:16px 0 6px;font-size:12px;color:#f5d9c8;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.25);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);border:0}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);border:0}
+.ctl{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:8px}
+button.ic{width:46px;height:46px;border-radius:50%;border:1px solid rgba(242,199,92,.5);background:rgba(0,0,0,.2);color:var(--snow);font-size:18px;cursor:pointer}
+button.ic.active{background:var(--green);border-color:#7ee0a8}
+button.big{width:68px;height:68px;font-size:26px;background:var(--gold);color:var(--ink);border:0}
+.vol{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:16px}
+h2{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:24px 4px 8px}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:14px;cursor:pointer;border:1px solid transparent}
+li:active{background:rgba(255,255,255,.08)}
+li.cur{background:rgba(31,107,69,.45);border-color:rgba(126,224,168,.5)}
+li .n{width:22px;text-align:center;color:var(--gold);font-size:14px}
+li .t{flex:1;min-width:0}
+li .t b{display:block;font-weight:normal;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+li .t span{font-size:12px;color:#f5d9c8}
+li .d{font-size:12px;color:#f5d9c8;font-variant-numeric:tabular-nums}
+#empty{padding:20px;text-align:center;color:#f5d9c8;font-size:14px;line-height:1.5}
+footer{margin-top:22px;text-align:center;font-size:12px;color:#d9b8a8;line-height:1.5}
+</style>
+</head>
+<body>
+<canvas id="snow"></canvas>
+<main>
+ <header>
+  <h1>🎄 Julebox<small>Glædelig jul</small></h1>
+  <button id="castBtn" hidden aria-label="Afspil på Chromecast">
+   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3a2 2 0 0 0-2 2v3h2V5h18v14h-7v2h7a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM1 18v3h3a3 3 0 0 0-3-3zm0-4v2a5 5 0 0 1 5 5h2a7 7 0 0 0-7-7zm0-4v2a9 9 0 0 1 9 9h2A11 11 0 0 0 1 10z"/></svg>
+   <span id="castLbl">Cast</span>
+  </button>
+ </header>
+
+ <section class="card">
+  <div class="gift" id="gift"><i>🎀</i></div>
+  <div id="title">Vælg en sang</div>
+  <div id="artist">&nbsp;</div>
+  <div id="castInfo"></div>
+  <div class="bar"><span id="cur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0"><span id="dur">0:00</span></div>
+  <div class="ctl">
+   <button class="ic" id="shuf" aria-label="Bland">🔀</button>
+   <button class="ic" id="prev" aria-label="Forrige">⏮</button>
+   <button class="ic big" id="play" aria-label="Afspil">▶</button>
+   <button class="ic" id="next" aria-label="Næste">⏭</button>
+   <button class="ic" id="rep" aria-label="Gentag">🔁</button>
+  </div>
+  <div class="vol">🔈<input type="range" id="vol" min="0" max="100" value="80">🔊</div>
+ </section>
+
+ <h2>Julesange</h2>
+ <ul id="list"></ul>
+ <div id="empty" hidden>Der er ingen sange endnu.</div>
+ <footer id="foot"></footer>
+</main>
+
+<script>
+/* ===== Sangbibliotek – ret kun denne liste ===== */
+const TRACKS = [
+  // { title: "Jingle Bells", artist: "Kunstner", src: "tracks/jingle-bells.mp3" },
+];
+/* =============================================== */
+
+const $ = id => document.getElementById(id);
+const audio = new Audio(); audio.preload = "metadata";
+let idx = -1, shuffle = false, repeat = false, casting = false;
+let rp = null, rpc = null;      // Cast RemotePlayer + controller
+let seeking = false;
+
+const fmt = s => { if(!isFinite(s)) return "0:00"; s=Math.floor(s); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
+const abs = u => new URL(u, location.href).href;
+
+/* ---------- liste ---------- */
+function renderList(){
+  const ul = $("list"); ul.innerHTML = "";
+  $("empty").hidden = TRACKS.length > 0;
+  TRACKS.forEach((t,i)=>{
+    const li = document.createElement("li");
+    if(i===idx) li.className="cur";
+    li.innerHTML = `<div class="n">${i===idx?"♪":i+1}</div><div class="t"><b></b><span></span></div><div class="d">${t.dur?fmt(t.dur):""}</div>`;
+    li.querySelector("b").textContent = t.title;
+    li.querySelector("span").textContent = t.artist || "";
+    li.onclick = () => load(i, true);
+    ul.appendChild(li);
+  });
+}
+
+/* ---------- afspilning ---------- */
+function setUI(){
+  const t = TRACKS[idx];
+  $("title").textContent = t ? t.title : "Vælg en sang";
+  $("artist").innerHTML = t ? (t.artist ? "" : "&nbsp;") : "&nbsp;";
+  if(t && t.artist) $("artist").textContent = t.artist;
+  renderList();
+  if("mediaSession" in navigator && t){
+    navigator.mediaSession.metadata = new MediaMetadata({title:t.title, artist:t.artist||"Julebox"});
+  }
+}
+function setPlaying(p){
+  $("play").textContent = p ? "⏸" : "▶";
+  $("gift").classList.toggle("play", p);
+}
+function load(i, autoplay){
+  if(!TRACKS.length) return;
+  idx = (i + TRACKS.length) % TRACKS.length;
+  const t = TRACKS[idx];
+  setUI();
+  if(casting){ castLoad(t, autoplay); return; }
+  audio.src = t.src;
+  if(autoplay) audio.play().catch(()=>{});
+}
+function nextIdx(dir){
+  if(shuffle && TRACKS.length>1){ let n; do{ n=Math.floor(Math.random()*TRACKS.length);}while(n===idx); return n; }
+  return idx + dir;
+}
+function toggle(){
+  if(!TRACKS.length) return;
+  if(idx<0){ load(0,true); return; }
+  if(casting){ rpc.playOrPause(); return; }
+  audio.paused ? audio.play().catch(()=>{}) : audio.pause();
+}
+audio.onplay = () => !casting && setPlaying(true);
+audio.onpause = () => !casting && setPlaying(false);
+audio.onloadedmetadata = () => { if(TRACKS[idx]) { TRACKS[idx].dur = audio.duration; renderList(); } $("dur").textContent = fmt(audio.duration); };
+audio.ontimeupdate = () => { if(casting||seeking) return; $("cur").textContent = fmt(audio.currentTime); if(audio.duration) $("seek").value = audio.currentTime/audio.duration*1000; };
+audio.onended = () => { if(repeat){ audio.currentTime=0; audio.play(); } else load(nextIdx(1), true); };
+audio.onerror = () => { $("castInfo").textContent = "Kunne ikke afspille filen."; };
+
+$("play").onclick = toggle;
+$("next").onclick = () => load(nextIdx(1), true);
+$("prev").onclick = () => { if(!casting && audio.currentTime>3) audio.currentTime=0; else load(nextIdx(-1), true); };
+$("shuf").onclick = () => { shuffle=!shuffle; $("shuf").classList.toggle("active",shuffle); };
+$("rep").onclick = () => { repeat=!repeat; $("rep").classList.toggle("active",repeat); };
+$("seek").oninput = () => { seeking=true; const d = casting ? rp.duration : audio.duration; $("cur").textContent = fmt($("seek").value/1000*d); };
+$("seek").onchange = () => {
+  const d = casting ? rp.duration : audio.duration;
+  if(casting){ rp.currentTime = $("seek").value/1000*d; rpc.seek(); } else audio.currentTime = $("seek").value/1000*d;
+  seeking=false;
+};
+$("vol").oninput = () => {
+  const v = $("vol").value/100; audio.volume = v;
+  if(casting){ rp.volumeLevel = v; rpc.setVolumeLevel(); }
+};
+audio.volume = .8;
+if("mediaSession" in navigator){
+  navigator.mediaSession.setActionHandler("play", toggle);
+  navigator.mediaSession.setActionHandler("pause", toggle);
+  navigator.mediaSession.setActionHandler("nexttrack", () => $("next").click());
+  navigator.mediaSession.setActionHandler("previoustrack", () => $("prev").click());
+}
+
+/* ---------- Chromecast (Google Cast Web Sender) ---------- */
+function initCast(){
+  const ctx = cast.framework.CastContext.getInstance();
+  ctx.setOptions({
+    receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+    autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+  });
+  rp = new cast.framework.RemotePlayer();
+  rpc = new cast.framework.RemotePlayerController(rp);
+  const E = cast.framework.RemotePlayerEventType;
+
+  rpc.addEventListener(E.IS_CONNECTED_CHANGED, () => {
+    if(rp.isConnected){
+      casting = true;
+      const resume = idx>=0 && !audio.paused;
+      const pos = audio.currentTime;
+      audio.pause();
+      $("castBtn").classList.add("on");
+      $("castLbl").textContent = rp.deviceName || cast.framework.CastContext.getInstance().getCurrentSession().getCastDevice().friendlyName;
+      $("castInfo").textContent = "Spiller på " + $("castLbl").textContent;
+      if(idx>=0) castLoad(TRACKS[idx], resume, pos);
+    } else {
+      casting = false;
+      const pos = rp.currentTime, wasPlaying = rp.playerState === "PLAYING";
+      $("castBtn").classList.remove("on");
+      $("castLbl").textContent = "Cast";
+      $("castInfo").textContent = "";
+      if(idx>=0){ audio.src = TRACKS[idx].src; audio.currentTime = pos||0; if(wasPlaying) audio.play().catch(()=>{}); }
+      setPlaying(false);
+    }
+  });
+  rpc.addEventListener(E.PLAYER_STATE_CHANGED, () => {
+    if(!casting) return;
+    setPlaying(rp.playerState === "PLAYING" || rp.playerState === "BUFFERING");
+    if(rp.playerState === "IDLE"){
+      const s = cast.framework.CastContext.getInstance().getCurrentSession();
+      const ms = s && s.getMediaSession();
+      if(ms && ms.idleReason === chrome.cast.media.IdleReason.FINISHED){
+        repeat ? castLoad(TRACKS[idx], true) : load(nextIdx(1), true);
+      }
+    }
+  });
+  rpc.addEventListener(E.CURRENT_TIME_CHANGED, () => {
+    if(!casting || seeking) return;
+    $("cur").textContent = fmt(rp.currentTime);
+    $("dur").textContent = fmt(rp.duration);
+    if(rp.duration) $("seek").value = rp.currentTime/rp.duration*1000;
+  });
+  $("castBtn").hidden = false;
+  $("castBtn").onclick = () => ctx.requestSession().catch(()=>{});
+}
+function castLoad(t, autoplay, startAt){
+  const s = cast.framework.CastContext.getInstance().getCurrentSession();
+  if(!s) return;
+  const info = new chrome.cast.media.MediaInfo(abs(t.src), t.mime || guessMime(t.src));
+  const md = new chrome.cast.media.MusicTrackMediaMetadata();
+  md.title = t.title; md.artist = t.artist || "Julebox";
+  info.metadata = md;
+  const req = new chrome.cast.media.LoadRequest(info);
+  req.autoplay = autoplay !== false;
+  if(startAt) req.currentTime = startAt;
+  s.loadMedia(req).catch(e => { $("castInfo").textContent = "Cast-fejl: filen skal ligge på en offentlig https-adresse."; });
+}
+const guessMime = u => /\.m4a|\.aac/i.test(u) ? "audio/mp4" : /\.ogg/i.test(u) ? "audio/ogg" : /\.wav/i.test(u) ? "audio/wav" : "audio/mpeg";
+
+window.__onGCastApiAvailable = ok => { if(ok){ try{ initCast(); }catch(e){} } };
+(function(){
+  const s = document.createElement("script");
+  s.src = "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1";
+  s.onerror = fallbackRemote;
+  document.head.appendChild(s);
+})();
+
+/* Reserve: Remote Playback API (Chrome/Edge/Android) hvis Cast-SDK ikke kan hentes */
+function fallbackRemote(){
+  if(!("remote" in audio)) return;
+  audio.remote.watchAvailability(a => { $("castBtn").hidden = !a; }).catch(()=>{ $("castBtn").hidden = false; });
+  $("castBtn").onclick = () => audio.remote.prompt().catch(()=>{});
+  audio.remote.onconnect = () => { $("castBtn").classList.add("on"); $("castInfo").textContent="Sender til skærm/højttaler"; };
+  audio.remote.ondisconnect = () => { $("castBtn").classList.remove("on"); $("castInfo").textContent=""; };
+}
+
+/* ---------- sne ---------- */
+(function(){
+  const c = $("snow"), x = c.getContext("2d");
+  let w, h, f = [];
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function size(){ w = c.width = innerWidth; h = c.height = innerHeight; }
+  size(); addEventListener("resize", size);
+  for(let i=0;i<70;i++) f.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*2.6+.8,v:Math.random()*.7+.3,d:Math.random()*6});
+  function tick(){
+    x.clearRect(0,0,w,h); x.fillStyle="rgba(255,255,255,.85)";
+    for(const p of f){ p.y+=p.v; p.d+=.01; p.x+=Math.sin(p.d)*.4; if(p.y>h){p.y=-5;p.x=Math.random()*w;}
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,7); x.fill(); }
+    if(!reduce) requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+$("foot").textContent = TRACKS.length ? TRACKS.length + " sange" : "";
+renderList();
+</script>
+</body>
+</html>
